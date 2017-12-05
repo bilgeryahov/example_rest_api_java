@@ -16,6 +16,6 @@ public class SimpleCalculatorTest {
     public void subtractTry(){
         int x  = 2;
         int y = 1;
-        assertEquals(2, SimpleCalculator.subtract(x,y));
+        assertEquals(1, SimpleCalculator.subtract(x,y));
     }
 }
