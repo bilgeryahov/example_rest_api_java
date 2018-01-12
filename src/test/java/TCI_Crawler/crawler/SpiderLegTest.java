@@ -56,7 +56,7 @@ public class SpiderLegTest {
         Movie expectedObject = new Movie(
                 "Forrest Gump",
                 "Drama",
-                1995,
+                1994,
                 "DVD",
                 "Robert Zemeckis",
                 new String[]{"Winston Groom", "Eric Roth"},
