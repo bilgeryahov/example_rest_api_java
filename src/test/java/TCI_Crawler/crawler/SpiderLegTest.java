@@ -9,30 +9,51 @@ import TCI_Crawler.searchObjects.SearchObjectWithLinks;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;
-
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 public class SpiderLegTest {
 
+
     /**
-     * verify - does the stubbing - verifies that the method is called x times.
-     * Verify is usually used for functions which run under conditions, to make sure that it
-     * actually is executed.
+     * Stubbing with usage of mocks
+     * Stubbing - verify that a certain function is called at least `n` times.
+     *
      * @throws InvalidSiteException
      * @throws InvalidCategoryException
      */
     @Test
     public void testGetObjectAndLinksVerifyHandlersCalled() throws InvalidSiteException, InvalidCategoryException {
+
+        // Create the HTML document from string....
         Document htmlDoc = Jsoup.parse("<html></html>");
+
+        // Create the mocks...
         LinksHandler linksHandler = mock(LinksHandler.class);
         SearchObjectHandler searchObjectHandler = mock(SearchObjectHandler.class);
+
+        // Use the mocks to create the actual SpiderLeg object.
         SpiderLeg leg = new SpiderLeg(linksHandler, searchObjectHandler);
         leg.getObjectAndLinks(htmlDoc);
+
+        // Verify that the `getValidLinks` function is called one time with parameter the `htmldoc`
         verify(linksHandler, times(1)).getValidLinks(htmlDoc);
+
+        // Verify that the `getSearchObjects` function is called one time with parameter the `htmldoc`
         verify(searchObjectHandler, times(1)).getSearchObjects(htmlDoc);
     }
+
+    /**
+     * Example of a test using Matchers.
+     * Matchers are the `assertThat` statements.
+     * Matchers are actually the parameters inside the method calls.
+     * In order to be able to use them, hamcrest is needed as a dependency.
+     * @throws InvalidSiteException
+     * @throws InvalidCategoryException
+     */
 
     @Test
     public void testGetObjectAndLinksVerifyCorrectObjectAndLinks() throws InvalidSiteException, InvalidCategoryException {
@@ -50,9 +71,15 @@ public class SpiderLegTest {
                 "<tr><th>Writers</th><td>Winston Groom, Eric Roth</td></tr>" +
                 "<tr><th>Stars</th><td>Tom Hanks, Rebecca Williams, Sally Field</td></tr>" +
                 "</table></div></body></html>";
+
+        // Transform the string into a Document class object.
         Document htmlDocument = Jsoup.parse(htmlString);
         SpiderLeg leg = new SpiderLeg(new LinksHandler(), new SearchObjectHandler());
+
+        // Expected links from the string above...
         String[] expectedLinks = {"https://test.com/link1.php", "https://test.com/link2.php"};
+
+        // Expected object from the string above.
         Movie expectedObject = new Movie(
                 "Forrest Gump",
                 "Drama",
@@ -65,9 +92,9 @@ public class SpiderLegTest {
         SearchObjectWithLinks objectWithLinks = leg.getObjectAndLinks(htmlDocument);
 
         // Assert that the retrieved links are equal to the expected links.
-        assertArrayEquals(expectedLinks, objectWithLinks.getRetrievedLinks().toArray());
+        assertThat(expectedLinks, is(equalTo(objectWithLinks.getRetrievedLinks().toArray())));
         // Assert that both objects are of the same class.
-        assertEquals(expectedObject.getClass(), objectWithLinks.getRetrievedObject().getClass());
+        assertThat(expectedObject.getClass(), is(equalTo(objectWithLinks.getRetrievedObject().getClass())));
         // Assert that both objects have the exact same properties.
         assertThat(expectedObject, samePropertyValuesAs(objectWithLinks.getRetrievedObject()));
     }
