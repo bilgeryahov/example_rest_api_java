@@ -19,8 +19,9 @@ public class SpiderLegTest {
 
 
     /**
-     * Stubbing with usage of mocks
-     * Stubbing - verify that a certain function is called at least `n` times.
+     *
+     * Using `verify` means using indirect testing.
+     * In our case we test indirectly if a function gets called. Mocking is used in our case.
      *
      * @throws InvalidSiteException
      * @throws InvalidCategoryException
