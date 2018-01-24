@@ -16,13 +16,12 @@ import org.junit.rules.ExpectedException;
 import org.mockito.*;
 import static org.junit.Assert.*;
 
-/**
- * Mockito :
- * - mocks - every unit test cover a small piece of code, mocking - faking
- * - stubs
- * - spies
- */
 public class SearchObjectHandlerTest {
+
+    /**
+     * Set an expected exception, which will be modified in a
+     * certain test.
+     */
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -124,6 +123,11 @@ public class SearchObjectHandlerTest {
         assertThat(expectedObject, samePropertyValuesAs(actualObject));
     }
 
+    /**
+     * Test which is meant to fail, and the expected
+     * exception is set to be `InvalidCategoryException`.
+     * @throws InvalidCategoryException
+     */
     @Test
     public void testGetDetailsForInvalidCategoryObject() throws InvalidCategoryException {
         // Set the expect exception to expect InvalidCategoryException and a certain message.

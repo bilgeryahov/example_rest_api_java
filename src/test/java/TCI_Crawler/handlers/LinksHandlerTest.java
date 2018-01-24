@@ -6,7 +6,8 @@ import org.junit.Test;
 import org.jsoup.nodes.Document;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockito.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
@@ -15,6 +16,14 @@ import java.util.List;
 
 @RunWith(Parameterized.class)
 public class LinksHandlerTest {
+
+    /**
+     * The parameters.
+     * Each object contains an array with the inputs.
+     * The number of crawlable sites is given.
+     * The last array contains the link, which can be crawled.
+     *
+     **/
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
@@ -55,16 +64,21 @@ public class LinksHandlerTest {
     private final int expectedArraySize;
     private final List<String> expectedLinks;
 
-    @InjectMocks
     private LinksHandler links;
+
+    /**
+     * Setup
+     * @throws Exception
+     */
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
         this.links = new LinksHandler();
     }
 
     public LinksHandlerTest(List<String> linksToParse, int expectedArraySize, List<String> expectedLinks) {
+
+        // Create the document, using the utilities class.
         this.htmlDocument = TestUtils.LinksToHtmlDocument(linksToParse);
         this.expectedArraySize = expectedArraySize;
         this.expectedLinks = expectedLinks;
@@ -75,9 +89,9 @@ public class LinksHandlerTest {
         List<String> validLinks = this.links.getValidLinks(this.htmlDocument);
 
         // Assert that the array size of the retrieved links is as expected.
-        assertEquals(this.expectedArraySize, validLinks.size());
+        assertThat(this.expectedArraySize, is(equalTo(validLinks.size())));
         // Assert that the retrieved links are equal to the expected links.
-        assertArrayEquals(this.expectedLinks.toArray(), validLinks.toArray());
+        assertThat(this.expectedLinks.toArray(), is(equalTo(validLinks.toArray())));
         // Assert that there are no forbidden links in the retrieved links.
         assertFalse(LinksHandler.forbiddenLinks.stream().anyMatch(validLinks::contains));
     }
